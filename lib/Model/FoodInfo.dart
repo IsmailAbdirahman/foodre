@@ -12,20 +12,8 @@ class FoodInfo{
 }
 
 final List<FoodInfo>listOfFood =[
-FoodInfo(
-  foodName: 'baasto',
-  foodImageUrl: 'assets/images/cabi.jpg',
-  foodDesc: 'hahlkhlklk',
-  level: 'Easy',
-  mints: '10mins'
-),
-  FoodInfo(
-      foodName: 'bariis',
-      foodImageUrl: 'assets/images/khud.jpg',
-      foodDesc: 'iyi',
-      level: 'hard',
-      mints: '40mins'
-  ),
+
+
   FoodInfo(
       foodName: 'macooni',
       foodImageUrl: 'assets/images/maacn.jpg',
@@ -33,13 +21,7 @@ FoodInfo(
       level: 'Easy',
       mints: '30mins'
   ),
-  FoodInfo(
-      foodName: 'baasto',
-      foodImageUrl: 'assets/images/mac.jpg',
-      foodDesc: 'hahlkhlklk',
-      level: 'Easy',
-      mints: '10mins'
-  ),
+
   FoodInfo(
       foodName: 'baasto',
       foodImageUrl: 'assets/images/pas.jpg',
@@ -48,10 +30,36 @@ FoodInfo(
       mints: '10mins'
   ),
   FoodInfo(
+      foodName: 'macooni',
+      foodImageUrl: 'assets/images/maacn.jpg',
+      foodDesc: 'hahlkhlklk',
+      level: 'Easy',
+      mints: '30mins'
+  ),
+
+  FoodInfo(
       foodName: 'baasto',
-      foodImageUrl: 'assets/images/yum.jpg',
+      foodImageUrl: 'assets/images/pas.jpg',
       foodDesc: 'hahlkhlklk',
       level: 'Easy',
       mints: '10mins'
   ),
+
+  FoodInfo(
+      foodName: 'macooni',
+      foodImageUrl: 'assets/images/maacn.jpg',
+      foodDesc: 'hahlkhlklk',
+      level: 'Easy',
+      mints: '30mins'
+  ),
+
+  FoodInfo(
+      foodName: 'baasto',
+      foodImageUrl: 'assets/images/pas.jpg',
+      foodDesc: 'hahlkhlklk',
+      level: 'Easy',
+      mints: '10mins'
+  ),
+
+
 ];
