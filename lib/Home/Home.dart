@@ -68,7 +68,7 @@ class _HomeState extends State<Home> {
                 child: Text('See all',style: TextStyle(color: Colors.blue,fontWeight: FontWeight.w800),),
               ),
               Container(
-                height: 400,
+                height: 550,
                 child: ListView.builder(
                     scrollDirection: Axis.horizontal,
                     itemCount: listOfFood.length,
@@ -117,7 +117,7 @@ class SlideCard extends StatelessWidget {
         children: <Widget>[
           Container(
               margin: EdgeInsets.all(20),
-              height: 300,
+              height: 430,
               width: 300,
               child: Hero(
                 tag: image,
@@ -130,11 +130,14 @@ class SlideCard extends StatelessWidget {
               )),
           Positioned(
             left: 50,
-            bottom: 7.0,
+            bottom: 20.0,
             child: Container(
               height: 130,
               width: 230,
               child: Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20)
+                ),
                 elevation: 4,
                 child: Column(
                   children: <Widget>[
@@ -196,7 +199,7 @@ class _SeeAllState extends State<SeeAll> {
         children: <Widget>[
           Container(
               margin: EdgeInsets.all(20),
-              height: 300,
+              height: 450,
               width: 300,
               child: ClipRRect(
                   borderRadius: BorderRadius.circular(30),
