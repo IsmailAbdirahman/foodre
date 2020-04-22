@@ -3,6 +3,7 @@ import 'package:foodre/Model/FoodInfo.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
+import 'DetailsFood.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -10,129 +11,236 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  PageController pageController;
-  double pageOffset = 0;
-
-  @override
-  void initState() {
-    super.initState();
-    pageController = PageController(viewportFraction: 0.8);
-    pageController.addListener(() {
-      setState(() => pageOffset = pageController.page);
-    });
-  }
-
-  @override
-  void dispose() {
-    pageController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: MediaQuery.of(context).size.height * 0.55,
-      child: PageView(
-        controller: pageController,
-        children: <Widget>[
-          PageView.builder(
-              itemCount: listOfFood.length,
-              itemBuilder: (BuildContext context,int index){
-                return SlidingCard(
-                  name: listOfFood[index].foodName,
-                  date: listOfFood[index].foodDesc,
-                  assetName: listOfFood[index].foodImageUrl,
-                  offset: pageOffset,
-                );
-
-              })
+  int _selectedIndex = 0;
+  List<String> _meals = ['Breakfast', 'Lunch', 'Dinner'];
 
 
-        ],
+
+
+  Widget _buildMeals(int index) {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _selectedIndex = index;
+        });
+      },
+      child: Container(
+        height: 30,
+        width: 90,
+        margin: EdgeInsets.only(top: 100),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        child: Text(
+          _meals[index],
+          style: TextStyle(
+            fontWeight: FontWeight.w900,
+            fontSize: 17,
+            color: _selectedIndex == index ? Colors.blue : Colors.grey,
+          ),
+        ),
       ),
     );
   }
-}
-
-class SlidingCard extends StatelessWidget {
-  final String name;
-  final String date;
-  final String assetName;
-  final double offset;
-
-  const SlidingCard({
-    Key key,
-    @required this.name,
-    @required this.date,
-    @required this.assetName,
-    @required this.offset,
-  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    double gauss = math.exp(-(math.pow((offset.abs() - 0.5), 2) / 0.08));
-    return Transform.translate(
-      offset: Offset(-32 * gauss * offset.sign, 0),
-      child: Card(
-        margin: EdgeInsets.only(left: 8, right: 8, bottom: 24),
-        elevation: 8,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
-        child: Column(
-          children: <Widget>[
-            ClipRRect(
-              borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
-              child: Image.asset(assetName,
-                height: MediaQuery.of(context).size.height * 0.3,
-                alignment: Alignment(-offset.abs(), 0),
-                fit: BoxFit.cover,),
-            ),
-            SizedBox(height: 8),
-            Expanded(
-              child: CardContent(
-                name: name,
-                date: date,
-                offset: gauss,
+
+    return SafeArea(
+      child: SizedBox(
+        height: MediaQuery.of(context).size.height * 2.55,
+        child: Scaffold(
+          backgroundColor: Color(0XFFFEFAE3),
+          body: Column(
+            children: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: _meals
+                    .asMap()
+                    .entries
+                    .map(
+                      (singleMeal) => _buildMeals(singleMeal.key),
+                    )
+                    .toList(),
               ),
-            ),
-          ],
+              Padding(
+                padding: const EdgeInsets.only(left: 350),
+                child: Text('See all',style: TextStyle(color: Colors.blue,fontWeight: FontWeight.w800),),
+              ),
+              Container(
+                height: 400,
+                child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: listOfFood.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return SlideCard(
+                        name: listOfFood[index].foodName,
+                        image: listOfFood[index].foodImageUrl,
+                        level: listOfFood[index].level,
+                        desc: listOfFood[index].foodDesc,
+                        min: listOfFood[index].mints,
+                      );
+                    }),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 }
 
-class CardContent extends StatelessWidget {
-  final String name;
-  final String date;
-  final double offset;
+class SlideCard extends StatelessWidget {
+  final String name, image, desc, level, min;
 
-  const CardContent(
-      {Key key,
-        @required this.name,
-        @required this.date,
-        @required this.offset})
-      : super(key: key);
+  SlideCard(
+      {@required this.name,
+      @required this.image,
+      @required this.level,
+      @required this.desc,
+      @required this.min,
+});
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Transform.translate(
-            offset: Offset(8 * offset, 0),
-            child: Text(name, style: TextStyle(fontSize: 20)),
-          ),
-          SizedBox(height: 8),
-          Transform.translate(
-            offset: Offset(32 * offset, 0),
-            child: Text(
-              date,
-              style: TextStyle(color: Colors.grey),
-            ),
-          ),
 
+    return GestureDetector(
+      onTap: (){
+
+        Navigator.push(context, MaterialPageRoute(
+         builder:(_)=>DetailsFood(
+           foodInfo:image,
+         )
+        ));
+      },
+      child: Stack(
+        children: <Widget>[
+          Container(
+              margin: EdgeInsets.all(20),
+              height: 300,
+              width: 300,
+              child: Hero(
+                tag: image,
+                child: ClipRRect(
+                    borderRadius: BorderRadius.circular(30),
+                    child: Image.asset(
+                      image,
+                      fit: BoxFit.cover,
+                    )),
+              )),
+          Positioned(
+            left: 50,
+            bottom: 7.0,
+            child: Container(
+              height: 130,
+              width: 230,
+              child: Card(
+                elevation: 4,
+                child: Column(
+                  children: <Widget>[
+                    Text(name,style: TextStyle(fontWeight: FontWeight.w800,fontSize: 17)),
+                    SizedBox(height:2.0 ,),
+                    Text(desc,style: TextStyle(color: Colors.grey,fontWeight: FontWeight.w400)),
+                    SizedBox(
+                      height: 35.0,
+                    ),
+                    Row(
+                     // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(left: 70),
+                          child: Text(min,style: TextStyle(fontWeight: FontWeight.w600),),
+                        ),
+                        Container(
+                            height: 23,
+                            child: VerticalDivider(
+                              color: Colors.grey,
+                              thickness: 1.0,
+                            )),
+                        Text(level,style:TextStyle(fontWeight: FontWeight.w600),),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+
+class SeeAll extends StatefulWidget {
+  final String name, image, desc, level, min;
+
+  SeeAll(
+      {@required this.name,
+        @required this.image,
+        @required this.level,
+        @required this.desc,
+        @required this.min,
+      });
+
+  @override
+  _SeeAllState createState() => _SeeAllState();
+}
+
+class _SeeAllState extends State<SeeAll> {
+  @override
+  Widget build(BuildContext context) {
+
+    return Scaffold(
+      body: Stack(
+        children: <Widget>[
+          Container(
+              margin: EdgeInsets.all(20),
+              height: 300,
+              width: 300,
+              child: ClipRRect(
+                  borderRadius: BorderRadius.circular(30),
+                  child: Image.asset(
+                    widget.image,
+                    fit: BoxFit.cover,
+                  ))),
+          Positioned(
+            left: 50,
+            bottom: 7.0,
+            child: Container(
+              height: 130,
+              width: 230,
+              child: Card(
+                elevation: 4,
+                child: Column(
+                  children: <Widget>[
+                    Text(widget.name,style: TextStyle(fontWeight: FontWeight.w800,fontSize: 17)),
+                    SizedBox(height:2.0 ,),
+                    Text(widget.desc,style: TextStyle(color: Colors.grey,fontWeight: FontWeight.w400)),
+                    SizedBox(
+                      height: 35.0,
+                    ),
+                    Row(
+                      // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(left: 70),
+                          child: Text(widget.min,style: TextStyle(fontWeight: FontWeight.w600),),
+                        ),
+                        Container(
+                            height: 23,
+                            child: VerticalDivider(
+                              color: Colors.grey,
+                              thickness: 1.0,
+                            )),
+                        Text(widget.level,style:TextStyle(fontWeight: FontWeight.w600),),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            ),
+          )
         ],
       ),
     );
