@@ -36,7 +36,7 @@ class homeState extends State<DisplayData> {
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Color.fromARGB(255, 240, 240, 240),
+        backgroundColor: Color(0XFFFEFAE3),
         elevation: 0,
         unselectedItemColor: Colors.black54,
         items: const <BottomNavigationBarItem>[
