@@ -13,6 +13,8 @@ class ExtendedIngredients{
 
   factory ExtendedIngredients.fromJson(Map<String, dynamic> parsedJson) {
 
+
+
     return ExtendedIngredients(
       image: parsedJson['image'],
       name: parsedJson['name'],
@@ -21,3 +23,6 @@ class ExtendedIngredients{
     );
   }
 }
+
+
+
