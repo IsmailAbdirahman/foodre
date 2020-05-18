@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:foodre/AppState/AppState.dart';
+import 'package:provider/provider.dart';
 import 'Home/Home.dart';
 
 class DisplayData extends StatefulWidget {
@@ -16,6 +18,13 @@ class homeState extends State<DisplayData> {
   static const TextStyle optionStyle =
   TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   List<Widget> _widgetOptions = <Widget>[
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider<AppState>(create: (_) => AppState()),
+      ],
+      child:  Home(),
+    ),
+
     Home(),
     Text('2'),
     Text('3'),

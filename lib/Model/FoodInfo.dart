@@ -1,51 +1,19 @@
-//import 'package:foodre/Model/ExtendedIngredients.dart';
-//
-//class FoodInformation {
-//  final String foodTitle;
-//  final String foodImageUrl;
-//  final int mints;
-//  final String instructions;
-//  final int servings;
-//  final List<ExtendedIngredients> extendedIngredients;
-//
-//
-//  FoodInformation(
-//      {this.foodTitle, this.foodImageUrl, this.mints,this.instructions,this.servings, this.extendedIngredients});
-//
-//
-//  factory FoodInformation.fromJson(Map<String, dynamic> parsedJson) {
-//
-//    var list = parsedJson['extendedIngredients'] as List;
-//
-//    List<ExtendedIngredients> imagesList = list.map((i) => ExtendedIngredients.fromJson(i)).toList();
-//
-//
-//    return FoodInformation(
-//        foodTitle: parsedJson['title'],
-//        foodImageUrl: parsedJson['image'],
-//        mints: parsedJson['readyInMinutes'],
-//        instructions: parsedJson['instructions'],
-//        servings: parsedJson['servings'],
-//        extendedIngredients: imagesList
-//    );
-//  }
-//}
-//
-
-import 'package:flutter/foundation.dart';
 import 'package:foodre/Model/ExtendedIngredients.dart';
 
-class FoodInformation {
+class PopularFoodModel {
+  int id;
   String foodTitle;
   String foodImageUrl;
   int mints;
   String steps;
   int servings;
+
   List<String> dishType = [];
   List<ExtendedIngredients> extendedIngredients;
 
-  FoodInformation(
+  PopularFoodModel(
       {this.foodTitle,
+        this.id,
       this.foodImageUrl,
       this.mints,
       this.steps,
@@ -53,21 +21,20 @@ class FoodInformation {
       this.extendedIngredients,
       this.dishType});
 
-  FoodInformation.fromJson(Map<String, dynamic> parsedJson) {
-    final inistructions = parsedJson['instructions'];
+  PopularFoodModel.fromJson(Map<String, dynamic> parsedJson) {
     var list = parsedJson['extendedIngredients'] as List;
     List<ExtendedIngredients> imagesList =
         list.map((i) => ExtendedIngredients.fromJson(i)).toList();
     var dishTypeFromJson = parsedJson['dishTypes'];
     List<String> dishTypeList = dishTypeFromJson.cast<String>();
-
+    id = parsedJson['id'];
     foodTitle = parsedJson['title'];
     foodImageUrl = parsedJson['image'];
     mints = parsedJson['readyInMinutes'];
     servings = parsedJson['servings'];
     extendedIngredients = imagesList;
     dishType = dishTypeList;
-    steps = inistructions;
+    steps = parsedJson['instructions'];
   }
 
 //  factory FoodInformation.fromJsonbr(Map<String, dynamic> parsedJson) {

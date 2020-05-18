@@ -79,7 +79,7 @@ import 'package:flutter/material.dart';
 import 'package:foodre/Model/FoodInfo.dart';
 
 class DetailScreen extends StatefulWidget {
-  final FoodInformation foodInformation;
+  final PopularFoodModel foodInformation;
 
   // final bool inFavorites;
 
@@ -192,7 +192,7 @@ class _DetailScreenState extends State<DetailScreen>
 }
 
 class IngredientsView extends StatelessWidget {
-  final FoodInformation ingredients;
+  final PopularFoodModel ingredients;
 
   IngredientsView(this.ingredients);
 

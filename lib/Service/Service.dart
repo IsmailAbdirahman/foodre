@@ -7,15 +7,15 @@ import 'dart:convert';
 
 
 
-const API_KEY = "33d54f683dae4e22b98ed66c64c97d98";
+const API_KEY = "8b8e9b00804e4d6ca07b7ee3198e580a";
 
 
-List<RecommendModel> theRecommendedList = new List<RecommendModel>();
+List<RecommendModel> theRecommendedList =[];
 List<IngredientsIdsList> idsList = [];
-List<FoodInformation> theFoodListInfo = [];
+List<PopularFoodModel> theFoodListInfo = [];
 
 
-Future<void> getRecommendedRecipesInfo() async {
+Future<List<RecommendModel>> getRecommendedRecipesInfo() async {
   String informationUrl =
       "https://api.spoonacular.com/recipes/random?number=10&tags=vegetarian,dessert&apiKey=$API_KEY";
 
@@ -29,12 +29,13 @@ Future<void> getRecommendedRecipesInfo() async {
       theRecommendedList.add(new RecommendModel.fromJson(element));
     });
   }
+  return theRecommendedList;
 }
 
 //--------------------------------------------------------------------------------------//
 
 
-Future<List<FoodInformation>> getRecipesId() async {
+Future<List<PopularFoodModel>> getRecipesId() async {
   String idUrl =
       "https://api.spoonacular.com/recipes/findByIngredients?ingredients=chicken,+pasta,+Bread,+Seafood,+Baking,+Cheese&number=100&apiKey=$API_KEY";
 
@@ -55,8 +56,9 @@ Future<List<FoodInformation>> getRecipesId() async {
   return getRecipesInformation(idsList);
 }
 
-Future<List<FoodInformation>> getRecipesInformation(
-    List<IngredientsIdsList> ids) async {
+
+
+Future<List<PopularFoodModel>> getRecipesInformation(List<IngredientsIdsList> ids) async {
   var requestedIds = [];
   ids.forEach((i) {
     requestedIds.add(i.id);
@@ -74,8 +76,9 @@ Future<List<FoodInformation>> getRecipesInformation(
   if (file != null && await file.exists()) {
     var res = await file.readAsString();
     Iterable l = (json.decode(res));
-    List<FoodInformation> theFoodListInfo =
-        l.map((model) => FoodInformation.fromJson(model)).toList();
+
+    List<PopularFoodModel> theFoodListInfo =
+        l.map((model) => PopularFoodModel.fromJson(model)).toList();
     return theFoodListInfo;
 
   }

@@ -1,7 +1,4 @@
-
 import 'ExtendedIngredients.dart';
-
-
 
 class  RecommendModel{
   String foodTitle;
@@ -22,7 +19,6 @@ class  RecommendModel{
         this.dishType});
 
   RecommendModel.fromJson(Map<String, dynamic> parsedJson) {
-    final inistructions = parsedJson['instructions'];
     var list = parsedJson['extendedIngredients'] as List;
     List<ExtendedIngredients> imagesList =
     list.map((i) => ExtendedIngredients.fromJson(i)).toList();
@@ -35,6 +31,6 @@ class  RecommendModel{
     servings = parsedJson['servings'];
     extendedIngredients = imagesList;
     dishType = dishTypeList;
-    steps = inistructions;
+    steps = parsedJson['instructions'];
   }
 }

@@ -1,8 +1,19 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:foodre/DisplayData.dart';
-import 'package:foodre/Home/Home.dart';
+import 'package:hive/hive.dart';
+import 'package:path_provider/path_provider.dart';
+void main()async {
 
-void main() => runApp(MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  Directory document = await getApplicationDocumentsDirectory();
+  Hive.init(document.path);
+  await Hive.openBox<String>("idLists");
+
+
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.

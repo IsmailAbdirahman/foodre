@@ -26,6 +26,13 @@ dependencies:
   http: ^0.12.0+4
   flutter_cache_manager: ^1.2.2
   cached_network_image: ^2.1.0+1
+  shared_preferences: ^0.5.7+1
+  provider: ^4.0.2
+  hive: ^1.4.1+1
+  hive_flutter: ^0.3.0+2
+  path_provider: ^1.6.5
+
+
 
 
 
