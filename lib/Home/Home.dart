@@ -3,16 +3,9 @@ import 'package:foodre/AppState/AppState.dart';
 import 'package:foodre/Model/FoodInfo.dart';
 import 'package:flutter/material.dart';
 import 'package:foodre/Model/RecommendedModel.dart';
-import 'package:foodre/Model/SharedPrefIDsModel.dart';
 import 'package:foodre/Service/Service.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:foodre/Service/SharedPrefs.dart';
-import 'package:hive/hive.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:io';
-
 import '../CoonfigScreen.dart';
 import 'DetailsFood.dart';
 
@@ -27,7 +20,6 @@ class _HomeState extends State<Home> {
 
   Future<List<PopularFoodModel>> popularListFromService;
   Future<List<RecommendModel>> recommendListFromService;
-  SharedPrefs sharedPrefs = SharedPrefs();
 
   Widget _buildMeals(int index) {
     return GestureDetector(
@@ -60,15 +52,7 @@ class _HomeState extends State<Home> {
     super.initState();
     popularListFromService = getRecipesId();
     recommendListFromService = getRecommendedRecipesInfo();
-    sharedPrefs.getTheID();
-
-    //  getData();
   }
-
-//  getData() async {
-//    await getRecommendedRecipesInfo();
-//    recommendListFromService = theRecommendedList;
-//  }
 
   @override
   Widget build(BuildContext context) {
@@ -218,7 +202,6 @@ class RecommendCard extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.only(left: 10, right: 10),
                         child: Row(
-                          // crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
                             Text(
@@ -270,30 +253,18 @@ class PopularCard extends StatefulWidget {
   @override
   _PopularCardState createState() => _PopularCardState();
 }
-
 class _PopularCardState extends State<PopularCard> {
-  static SharedPrefs _sharedPrefs = SharedPrefs();
-  bool isSavedd = true;
-
   @override
   void initState() {
     super.initState();
-    getAllIDSFromSharedPref();
-  }
-
-  getAllIDSFromSharedPref() async {
-    await _sharedPrefs.getTheID();
-//    setState(() {
-//      isSavedd =
-//          _sharedPrefs.gotIds.contains(widget.foodInformation.id.toString());
-//    });
-    if (isSavedd) {
-    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final appState =Provider.of<AppState>(context);
+    final appState = Provider.of<AppState>(context);
+
+
+
 
     return GestureDetector(
       onTap: () async {
@@ -381,13 +352,18 @@ class _PopularCardState extends State<PopularCard> {
                   color: Colors.white, borderRadius: BorderRadius.circular(50)),
               child: IconButton(
                 icon: Icon(
-                  ///
-                  Icons.favorite_border,
+
+                  appState.getDataFromHive(foodId: widget.foodInformation.id)
+                      ? Icons.favorite
+                      : Icons.favorite_border,
                   color: Colors.redAccent,
                   size: 30,
                 ),
                 onPressed: () {
-                  appState.saveDataIntoHive(widget.foodInformation.id.toString());
+                  setState(() {
+                    appState.saveDataIntoHive(widget.foodInformation.id.toString());
+                  });
+
                 },
               ),
             ),
@@ -397,7 +373,6 @@ class _PopularCardState extends State<PopularCard> {
     );
   }
 
-  static List<String> _savedConverted = List<String>();
 
 //  check(String id) async {
 //    await _sharedPrefs.getTheID();

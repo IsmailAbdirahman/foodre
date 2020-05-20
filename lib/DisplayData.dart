@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foodre/AppState/AppState.dart';
+import 'package:foodre/Favorite/Favorite.dart';
 import 'package:provider/provider.dart';
 import 'Home/Home.dart';
 
@@ -25,10 +26,12 @@ class homeState extends State<DisplayData> {
       child:  Home(),
     ),
 
-    Home(),
-    Text('2'),
-    Text('3'),
-
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider<AppState>(create: (_) => AppState()),
+      ],
+      child:  Favorite(),
+    ),
   ];
 
   void _onItemTapped(int index) {
@@ -53,13 +56,10 @@ class homeState extends State<DisplayData> {
             icon: Icon(Icons.home),
             title: SizedBox.shrink(),
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-            title: SizedBox.shrink(),
-          ),
+
 
           BottomNavigationBarItem(
-            icon: Icon(Icons.person),
+            icon: Icon(Icons.favorite),
             title: SizedBox.shrink(),
           ),
         ],

@@ -3,39 +3,63 @@ import 'package:hive/hive.dart';
 
 class AppState extends ChangeNotifier {
   Box<String> idListsBox;
-  List<String> foodIdsListt = [];
+  List<String> _foodIdsListt = [];
+
+  get foodIdsListt => _foodIdsListt;
 
   AppState() {
     idListsBox = Hive.box<String>("idLists");
     getDataFromHive();
   }
 
+//  saveDataIntoHive(String foodId) {
+//
+//    if (!_foodIdsListt.contains(foodId)) {
+//      idListsBox.put(int.parse(foodId), foodId);
+//    } else {
+//      idListsBox.delete(int.parse(foodId));
+//      print("ALready exist");
+//    }
+//
+//    notifyListeners();
+//  }
+//
+//  getDataFromHive() {
+//    if (idListsBox != null) {
+//      List<int> keys = idListsBox.keys.cast<int>().toList();
+//      keys.forEach((i) {
+//        idListsBox.get(i);
+//        _foodIdsListt.add(idListsBox.get(i));
+//      });
+//    }
+//    notifyListeners();
+//  }
+
   saveDataIntoHive(String foodId) {
+    if (!getDataFromHive(foodId: int.parse(foodId))) {
+      idListsBox.put(int.parse(foodId), foodId);
+      print("THE RE ADDED KEY IS ${int.parse(foodId)}");
+    } else {
+      idListsBox.delete(int.parse(foodId));
+      print("THE RE REMOVED KEY IS ${int.parse(foodId)}");
 
-
-    if(!foodIdsListt.contains(foodId)){
-      idListsBox.add(foodId);
-
-    }else{
-
-      print("ALready exist");
     }
-    notifyListeners();
 
+    notifyListeners();
   }
 
-  getDataFromHive() {
+  bool getDataFromHive({int foodId}) {
     if (idListsBox != null) {
       List<int> keys = idListsBox.keys.cast<int>().toList();
       keys.forEach((i) {
         idListsBox.get(i);
-        foodIdsListt.add(idListsBox.get(i));
+        _foodIdsListt.add(idListsBox.get(i));
       });
-      print(
-          "THE VALUES ARE-----------------------------------------  ${foodIdsListt}");
-
-
-      notifyListeners();
+    }
+    if (idListsBox.containsKey(foodId)) {
+      return true;
+    } else {
+      return false;
     }
   }
 }

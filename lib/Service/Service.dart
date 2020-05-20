@@ -7,12 +7,13 @@ import 'dart:convert';
 
 
 
-const API_KEY = "8b8e9b00804e4d6ca07b7ee3198e580a";
+const API_KEY = "ecc7e07b43f24edd9ba88f1951c3962e";
 
 
 List<RecommendModel> theRecommendedList =[];
 List<IngredientsIdsList> idsList = [];
 List<PopularFoodModel> theFoodListInfo = [];
+List<PopularFoodModel> theFavFoodListInfo =[];
 
 
 Future<List<RecommendModel>> getRecommendedRecipesInfo() async {
@@ -77,10 +78,37 @@ Future<List<PopularFoodModel>> getRecipesInformation(List<IngredientsIdsList> id
     var res = await file.readAsString();
     Iterable l = (json.decode(res));
 
-    List<PopularFoodModel> theFoodListInfo =
+    theFoodListInfo =
         l.map((model) => PopularFoodModel.fromJson(model)).toList();
-    return theFoodListInfo;
 
   }
+  return theFoodListInfo;
+
+}
+
+Future<List<PopularFoodModel>> getFavFood(List<String> ids) async {
+  var requestedIds = [];
+  ids.forEach((i) {
+    requestedIds.add(i);
+  });
+  String retrievedIds = requestedIds
+      .toString()
+      .replaceAll("[", "")
+      .replaceAll("]", "")
+      .replaceAll(" ", "");
+  String informationUrl =
+      "https://api.spoonacular.com/recipes/informationBulk?ids=$retrievedIds&apiKey=$API_KEY";
+
+  var file = await DefaultCacheManager().getSingleFile(informationUrl);
+
+  if (file != null && await file.exists()) {
+    var res = await file.readAsString();
+    Iterable l = (json.decode(res));
+
+     theFavFoodListInfo =
+    l.map((model) => PopularFoodModel.fromJson(model)).toList();
+
+  }
+  return theFavFoodListInfo;
 
 }
