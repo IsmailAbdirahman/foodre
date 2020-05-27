@@ -7,7 +7,7 @@ import 'dart:convert';
 
 
 
-const API_KEY = "ecc7e07b43f24edd9ba88f1951c3962e";
+const API_KEY = "4af8609e2b6644b0aa9f9a57354a53c5";
 
 
 List<RecommendModel> theRecommendedList =[];
@@ -87,6 +87,7 @@ Future<List<PopularFoodModel>> getRecipesInformation(List<IngredientsIdsList> id
 }
 
 Future<List<PopularFoodModel>> getFavFood(List<String> ids) async {
+
   var requestedIds = [];
   ids.forEach((i) {
     requestedIds.add(i);
@@ -96,6 +97,7 @@ Future<List<PopularFoodModel>> getFavFood(List<String> ids) async {
       .replaceAll("[", "")
       .replaceAll("]", "")
       .replaceAll(" ", "");
+
   String informationUrl =
       "https://api.spoonacular.com/recipes/informationBulk?ids=$retrievedIds&apiKey=$API_KEY";
 
@@ -104,10 +106,10 @@ Future<List<PopularFoodModel>> getFavFood(List<String> ids) async {
   if (file != null && await file.exists()) {
     var res = await file.readAsString();
     Iterable l = (json.decode(res));
+    print("hahahahaha ${l}");
 
      theFavFoodListInfo =
     l.map((model) => PopularFoodModel.fromJson(model)).toList();
-
   }
   return theFavFoodListInfo;
 

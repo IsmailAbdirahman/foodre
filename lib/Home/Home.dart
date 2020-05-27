@@ -245,19 +245,12 @@ class RecommendCard extends StatelessWidget {
   }
 }
 
-class PopularCard extends StatefulWidget {
+class PopularCard extends StatelessWidget {
   final PopularFoodModel foodInformation;
 
   PopularCard(this.foodInformation);
 
-  @override
-  _PopularCardState createState() => _PopularCardState();
-}
-class _PopularCardState extends State<PopularCard> {
-  @override
-  void initState() {
-    super.initState();
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -272,7 +265,7 @@ class _PopularCardState extends State<PopularCard> {
             context,
             MaterialPageRoute(
                 builder: (context) =>
-                    DetailScreen(foodInformation: widget.foodInformation)));
+                    DetailScreen(foodInformation: foodInformation)));
       },
       child: Stack(
         children: <Widget>[
@@ -281,14 +274,14 @@ class _PopularCardState extends State<PopularCard> {
               height: SizeConfig.blockSizeVertical * 25,
               width: SizeConfig.blockSizeHorizontal * 45,
               child: Hero(
-                tag: widget.foodInformation.foodImageUrl,
+                tag: foodInformation.foodImageUrl,
                 child: Padding(
                   padding:
                       const EdgeInsets.only(top: 20, bottom: 20, right: 20),
                   child: ClipRRect(
                       borderRadius: BorderRadius.circular(30),
                       child: CachedNetworkImage(
-                        imageUrl: widget.foodInformation.foodImageUrl,
+                        imageUrl: foodInformation.foodImageUrl,
                         fit: BoxFit.cover,
                       )),
                 ),
@@ -311,7 +304,7 @@ class _PopularCardState extends State<PopularCard> {
                       Padding(
                         padding:
                             const EdgeInsets.only(top: 5, left: 10, right: 10),
-                        child: Text(widget.foodInformation.foodTitle,
+                        child: Text(foodInformation.foodTitle,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                                 fontWeight: FontWeight.w800, fontSize: 17)),
@@ -320,7 +313,7 @@ class _PopularCardState extends State<PopularCard> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           Text(
-                            widget.foodInformation.mints.toString() +
+                            foodInformation.mints.toString() +
                                 " " +
                                 "mins",
                             style: TextStyle(fontWeight: FontWeight.w600),
@@ -332,7 +325,7 @@ class _PopularCardState extends State<PopularCard> {
                                 thickness: 1.0,
                               )),
                           Text(
-                              widget.foodInformation.servings.toString() +
+                             foodInformation.servings.toString() +
                                   " " +
                                   "servings",
                               style: TextStyle(fontWeight: FontWeight.w600))
@@ -353,16 +346,15 @@ class _PopularCardState extends State<PopularCard> {
               child: IconButton(
                 icon: Icon(
 
-                  appState.getDataFromHive(foodId: widget.foodInformation.id)
+                  appState.getDataFromHive(foodId: foodInformation.id)
                       ? Icons.favorite
                       : Icons.favorite_border,
                   color: Colors.redAccent,
                   size: 30,
                 ),
                 onPressed: () {
-                  setState(() {
-                    appState.saveDataIntoHive(widget.foodInformation.id.toString());
-                  });
+                    appState.saveDataIntoHive(foodInformation.id.toString());
+
 
                 },
               ),

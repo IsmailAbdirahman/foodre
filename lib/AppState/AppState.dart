@@ -53,6 +53,8 @@ class AppState extends ChangeNotifier {
       List<int> keys = idListsBox.keys.cast<int>().toList();
       keys.forEach((i) {
         idListsBox.get(i);
+        _foodIdsListt.remove(idListsBox.get(i));
+
         _foodIdsListt.add(idListsBox.get(i));
       });
     }
