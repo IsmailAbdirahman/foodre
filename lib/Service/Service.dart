@@ -7,7 +7,7 @@ import 'dart:convert';
 
 
 
-const API_KEY = "4af8609e2b6644b0aa9f9a57354a53c5";
+const API_KEY = "6865d12bb0234b3d8270639077da571c";
 
 
 List<RecommendModel> theRecommendedList =[];

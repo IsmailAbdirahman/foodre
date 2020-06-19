@@ -16,36 +16,9 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   int _selectedIndex = 0;
-  List<String> _meals = ['Breakfast', 'Lunch', 'Dinner'];
 
   Future<List<PopularFoodModel>> popularListFromService;
   Future<List<RecommendModel>> recommendListFromService;
-
-  Widget _buildMeals(int index) {
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          _selectedIndex = index;
-        });
-      },
-      child: Container(
-        height: 30,
-        width: 90,
-        margin: EdgeInsets.only(top: 100),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-        child: Text(
-          _meals[index],
-          style: TextStyle(
-            fontWeight: FontWeight.w900,
-            fontSize: 17,
-            color: _selectedIndex == index ? Colors.blue : Colors.grey,
-          ),
-        ),
-      ),
-    );
-  }
 
   @override
   void initState() {
@@ -62,86 +35,107 @@ class _HomeState extends State<Home> {
       child: Scaffold(
         backgroundColor: Color(0XFFFEFAE3),
         body: ListView(
-          physics: ScrollPhysics(),
-          scrollDirection: Axis.vertical,
           children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: _meals
-                  .asMap()
-                  .entries
-                  .map((singleMeal) => _buildMeals(singleMeal.key))
-                  .toList(),
-            ),
-            Container(
-                margin: EdgeInsets.only(left: 23),
-                child: Text(
-                  "Recommaneded Food",
-                  style: TextStyle(
-                      fontWeight: FontWeight.w800,
-                      wordSpacing: 5,
-                      letterSpacing: 3,
-                      fontSize: 17,
-                      color: Colors.black),
-                )),
-            Container(
-              height: SizeConfig.blockSizeVertical * 32,
-              width: SizeConfig.blockSizeHorizontal * 90,
-              child: FutureBuilder<List<RecommendModel>>(
-                future: recommendListFromService,
-                builder: (BuildContext context, snapshot) {
-                  if (snapshot.hasData) {
-                    List<RecommendModel> recommendModelSnapshot = snapshot.data;
-                    return ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        shrinkWrap: true,
-                        itemCount: recommendModelSnapshot.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return RecommendCard(
-                            recommendModel: recommendModelSnapshot[index],
-                          );
-                        });
-                  } else {
-                    return Center(child: CircularProgressIndicator());
-                  }
-                },
-              ),
-            ),
-            Container(
-                margin: EdgeInsets.only(left: 23, top: 100),
-                child: Text(
-                  "Popular Food",
-                  style: TextStyle(
-                      fontWeight: FontWeight.w800,
-                      wordSpacing: 5,
-                      letterSpacing: 3,
-                      fontSize: 17,
-                      color: Colors.black),
-                )),
-            FutureBuilder<List<PopularFoodModel>>(
-                future: popularListFromService,
-                builder: (BuildContext context, snapshot) {
-                  if (snapshot.hasData) {
-                    List<PopularFoodModel> foodInfoSnapshot = snapshot.data;
-
-                    return Container(
-                      height: SizeConfig.blockSizeVertical * 2000,
-                      child: ListView.builder(
-                          scrollDirection: Axis.vertical,
-                          shrinkWrap: true,
-                          itemCount: foodInfoSnapshot.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return PopularCard(foodInfoSnapshot[index]);
-                          }),
-                    );
-                  } else {
-                    return Center(child: CircularProgressIndicator());
-                  }
-                }),
+            letsCookWidget(),
+            recommendedHeaderWidget(),
+            recommendedListWidget(),
+            popularHeaderWidget(),
+            popularListWidget(),
           ],
         ),
       ),
     );
+  }
+
+  Widget letsCookWidget(){
+    return Container(
+      height: 70,
+      margin: const EdgeInsets.only(top: 40, left: 23),
+      child: Text(
+        "Lets cOOk",
+        style: TextStyle(
+            fontWeight: FontWeight.w900,
+            fontSize: 27,
+            letterSpacing: 2.5),
+      ),
+    );
+  }
+  Widget recommendedHeaderWidget() {
+    return Container(
+        margin: EdgeInsets.only(left: 23),
+        child: Text(
+          "Recommended Food",
+          style: TextStyle(
+              fontWeight: FontWeight.w800,
+              wordSpacing: 5,
+              letterSpacing: 3,
+              fontSize: 17,
+              color: Colors.black),
+        ));
+  }
+
+  Widget recommendedListWidget() {
+    return Container(
+      height: SizeConfig.blockSizeVertical * 32,
+      width: SizeConfig.blockSizeHorizontal * 90,
+      child: FutureBuilder<List<RecommendModel>>(
+        future: recommendListFromService,
+        builder: (BuildContext context, snapshot) {
+          if (snapshot.hasData) {
+            List<RecommendModel> recommendModelSnapshot = snapshot.data;
+            return ListView.builder(
+                scrollDirection: Axis.horizontal,
+                shrinkWrap: true,
+                itemCount: recommendModelSnapshot.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return RecommendCard(
+                    recommendModel: recommendModelSnapshot[index],
+                  );
+                });
+          } else {
+            return Center(child: CircularProgressIndicator());
+          }
+        },
+      ),
+    );
+  }
+
+  Widget popularHeaderWidget() {
+    return Container(
+        margin: EdgeInsets.only(left: 23, top: 100),
+        child: Text(
+          "Popular Food",
+          style: TextStyle(
+              fontWeight: FontWeight.w800,
+              wordSpacing: 5,
+              letterSpacing: 3,
+              fontSize: 17,
+              color: Colors.black),
+        ));
+  }
+
+  //FutureBuilder  for popular list is called here
+  Widget popularListWidget() {
+    return FutureBuilder<List<PopularFoodModel>>(
+        future: popularListFromService,
+        builder: (BuildContext context, snapshot) {
+          if (snapshot.hasData) {
+            List<PopularFoodModel> foodInfoSnapshot = snapshot.data;
+
+            return Container(
+              height: SizeConfig.blockSizeVertical * 2000,
+              child: ListView.builder(
+                  scrollDirection: Axis.vertical,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: foodInfoSnapshot.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return PopularCard(foodInfoSnapshot[index]);
+                  }),
+            );
+          } else {
+            return Center(child: CircularProgressIndicator());
+          }
+        });
   }
 }
 
@@ -162,86 +156,110 @@ class RecommendCard extends StatelessWidget {
 //      },
       child: Stack(
         children: <Widget>[
-          Container(
-              margin: EdgeInsets.all(20),
-              height: SizeConfig.blockSizeVertical * 24,
-              width: SizeConfig.blockSizeHorizontal * 53,
-              child: Hero(
-                tag: recommendModel.foodImageUrl,
-                child: ClipRRect(
-                    borderRadius: BorderRadius.circular(30),
-                    child: CachedNetworkImage(
-                      imageUrl: recommendModel.foodImageUrl,
-                      fit: BoxFit.cover,
-                    )),
-              )),
-          Positioned(
-            left: 10,
-            bottom: -30.0,
-            child: Container(
-              height: SizeConfig.blockSizeVertical * 22,
-              width: 230,
-              child: Padding(
-                padding: const EdgeInsets.all(28.0),
-                child: Card(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20)),
-                  elevation: 4,
-                  child: Column(
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Text(recommendModel.foodTitle,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                                fontWeight: FontWeight.w800, fontSize: 17)),
-                      ),
-                      SizedBox(
-                        height: 10.0,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 10, right: 10),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Text(
-                              recommendModel.mints.toString() + " " + "mins",
-                              style: TextStyle(fontWeight: FontWeight.w600),
-                            ),
-                            Container(
-                                height: 23,
-                                child: VerticalDivider(
-                                  color: Colors.grey,
-                                  thickness: 1.0,
-                                )),
-                            Text(
-                                recommendModel.servings.toString() +
-                                    " " +
-                                    "servings",
-                                style: TextStyle(fontWeight: FontWeight.w600))
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-          Positioned(
-              left: 155,
-              top: 115,
-              child: IconButton(
-                icon: Icon(
-                  Icons.favorite_border,
-                  color: Colors.redAccent,
-                  size: 30,
-                ),
-                onPressed: () {},
-              )),
+          recommendedImagesWidget(),
+          cardOfRecommendedListWidget(),
+          favButtonOfRecommendedWidget(),
         ],
       ),
     );
+  }
+
+  Widget cardOfRecommendedListWidget() {
+    return Positioned(
+      left: 10,
+      bottom: -30.0,
+      child: Container(
+        height: SizeConfig.blockSizeVertical * 22,
+        width: 230,
+        child: Padding(
+          padding: const EdgeInsets.all(28.0),
+          child: Card(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            elevation: 4,
+            child: Column(
+              children: <Widget>[
+                recommendedTitlesWidget(),
+                SizedBox(
+                  height: 10.0,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 10, right: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      recommendedMinitsWidget(),
+                      dividerWidget(),
+                      recommendedServingWidget(),
+                    ],
+                  ),
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget recommendedImagesWidget() {
+    return Container(
+        margin: EdgeInsets.all(20),
+        height: SizeConfig.blockSizeVertical * 24,
+        width: SizeConfig.blockSizeHorizontal * 53,
+        child: Hero(
+          tag: recommendModel.foodImageUrl,
+          child: ClipRRect(
+              borderRadius: BorderRadius.circular(30),
+              child: CachedNetworkImage(
+                imageUrl: recommendModel.foodImageUrl,
+                fit: BoxFit.cover,
+              )),
+        ));
+  }
+
+  Widget recommendedTitlesWidget() {
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Text(recommendModel.foodTitle,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(fontWeight: FontWeight.w800, fontSize: 17)),
+    );
+  }
+
+  Widget recommendedMinitsWidget() {
+    return Text(
+      recommendModel.mints.toString() + " " + "mins",
+      style: TextStyle(fontWeight: FontWeight.w600),
+    );
+  }
+
+  Widget dividerWidget() {
+    return Container(
+        height: 23,
+        child: VerticalDivider(
+          color: Colors.grey,
+          thickness: 1.0,
+        ));
+  }
+
+  Widget recommendedServingWidget() {
+    return Text(recommendModel.servings.toString() + " " + "servings",
+        style: TextStyle(fontWeight: FontWeight.w600));
+  }
+
+  Widget favButtonOfRecommendedWidget() {
+    return Positioned(
+        left: 155,
+        top: 115,
+        child: IconButton(
+          icon: Icon(
+            Icons.favorite_border,
+            color: Colors.redAccent,
+            size: 30,
+          ),
+          onPressed: () {},
+        ));
   }
 }
 
@@ -250,14 +268,9 @@ class PopularCard extends StatelessWidget {
 
   PopularCard(this.foodInformation);
 
-
-
   @override
   Widget build(BuildContext context) {
     final appState = Provider.of<AppState>(context);
-
-
-
 
     return GestureDetector(
       onTap: () async {
@@ -269,23 +282,7 @@ class PopularCard extends StatelessWidget {
       },
       child: Stack(
         children: <Widget>[
-          Container(
-              margin: EdgeInsets.all(20),
-              height: SizeConfig.blockSizeVertical * 25,
-              width: SizeConfig.blockSizeHorizontal * 45,
-              child: Hero(
-                tag: foodInformation.foodImageUrl,
-                child: Padding(
-                  padding:
-                      const EdgeInsets.only(top: 20, bottom: 20, right: 20),
-                  child: ClipRRect(
-                      borderRadius: BorderRadius.circular(30),
-                      child: CachedNetworkImage(
-                        imageUrl: foodInformation.foodImageUrl,
-                        fit: BoxFit.cover,
-                      )),
-                ),
-              )),
+          popularImagesWidget(),
           Positioned(
             left: 160,
             bottom: 40.0,
@@ -301,34 +298,13 @@ class PopularCard extends StatelessWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: <Widget>[
-                      Padding(
-                        padding:
-                            const EdgeInsets.only(top: 5, left: 10, right: 10),
-                        child: Text(foodInformation.foodTitle,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                                fontWeight: FontWeight.w800, fontSize: 17)),
-                      ),
+                      popularTitlesWidget(),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                          Text(
-                            foodInformation.mints.toString() +
-                                " " +
-                                "mins",
-                            style: TextStyle(fontWeight: FontWeight.w600),
-                          ),
-                          Container(
-                              height: 23,
-                              child: VerticalDivider(
-                                color: Colors.grey,
-                                thickness: 1.0,
-                              )),
-                          Text(
-                             foodInformation.servings.toString() +
-                                  " " +
-                                  "servings",
-                              style: TextStyle(fontWeight: FontWeight.w600))
+                          popularMinitsWidget(),
+                          dividerWidget(),
+                          popularServingWidget(),
                         ],
                       ),
                     ],
@@ -345,7 +321,6 @@ class PopularCard extends StatelessWidget {
                   color: Colors.white, borderRadius: BorderRadius.circular(50)),
               child: IconButton(
                 icon: Icon(
-
                   appState.getDataFromHive(foodId: foodInformation.id)
                       ? Icons.favorite
                       : Icons.favorite_border,
@@ -353,9 +328,7 @@ class PopularCard extends StatelessWidget {
                   size: 30,
                 ),
                 onPressed: () {
-                    appState.saveDataIntoHive(foodInformation.id.toString());
-
-
+                  appState.saveDataIntoHive(foodInformation.id.toString());
                 },
               ),
             ),
@@ -365,27 +338,58 @@ class PopularCard extends StatelessWidget {
     );
   }
 
+  Widget popularImagesWidget() {
+    return Container(
+        margin: EdgeInsets.all(20),
+        height: SizeConfig.blockSizeVertical * 25,
+        width: SizeConfig.blockSizeHorizontal * 45,
+        child: Hero(
+          tag: foodInformation.foodImageUrl,
+          child: Padding(
+            padding: const EdgeInsets.only(top: 20, bottom: 20, right: 20),
+            child: ClipRRect(
+                borderRadius: BorderRadius.circular(30),
+                child: CachedNetworkImage(
+                  imageUrl: foodInformation.foodImageUrl,
+                  fit: BoxFit.cover,
+                )),
+          ),
+        ));
+  }
 
-//  check(String id) async {
-//    await _sharedPrefs.getTheID();
-//    if (_sharedPrefs.gotIds == null) {
-//      _savedConverted.add(id);
-//      _sharedPrefs.saveTheId(_savedConverted);
-//    }
-//    final isAlreadySaved = _sharedPrefs.gotIds.contains(id);
-//    setState(() {
-//      if (!isAlreadySaved) {
-//        print("Its $isAlreadySaved so i added");
-//        _savedConverted.add(id);
-//        _sharedPrefs.saveTheId(_savedConverted);
-//      } else {
-//        print("Its $isAlreadySaved so i removed");
-//        _savedConverted = _sharedPrefs.gotIds;
-//        _savedConverted.remove(id);
-//        _sharedPrefs.saveTheId(_savedConverted);
-//      }
-//    });
-//  }
+  Widget popularTitlesWidget() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 5, left: 10, right: 10),
+      child: Text(foodInformation.foodTitle,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(fontWeight: FontWeight.w800, fontSize: 17)),
+    );
+  }
+
+  Widget popularMinitsWidget() {
+    return Text(
+      foodInformation.mints.toString() + " " + "mins",
+      style: TextStyle(fontWeight: FontWeight.w600),
+    );
+  }
+
+  Widget popularServingWidget() {
+    return Text(foodInformation.servings.toString() + " " + "servings",
+        style: TextStyle(fontWeight: FontWeight.w600));
+  }
+
+  Widget dividerWidget() {
+    return Container(
+        height: 23,
+        child: VerticalDivider(
+          color: Colors.grey,
+          thickness: 1.0,
+        ));
+  }
+
+  Widget favButtonOfpopularWidget() {}
+
+
 }
 
 //class SeeAll extends StatefulWidget {
