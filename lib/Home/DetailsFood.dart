@@ -1,85 +1,10 @@
-//import 'package:cached_network_image/cached_network_image.dart';
-//import 'package:flutter/cupertino.dart';
-//import 'package:flutter/material.dart';
-//import 'package:foodre/Model/FoodInfo.dart';
-//
-//class DetailsFood extends StatefulWidget {
-//  final FoodInformation foodInfo;
-//
-//  DetailsFood({this.foodInfo});
-//
-//  @override
-//  _DetailsFoodState createState() => _DetailsFoodState();
-//}
-//
-//class _DetailsFoodState extends State<DetailsFood> {
-//  @override
-//  Widget build(BuildContext context) {
-//    return Scaffold(
-//
-//      body: Column(
-//        children: <Widget>[
-//          Expanded(
-//            child: Stack(
-//              children: <Widget>[
-//                Container(
-//                  height: MediaQuery.of(context).size.width,
-//                  decoration: BoxDecoration(
-//                    borderRadius: BorderRadius.circular(30.0),
-//                    boxShadow: [
-//                      BoxShadow(
-//                        color: Colors.black26,
-//                        offset: Offset(0.0, 2.0),
-//                        blurRadius: 6.0,
-//                      ),
-//                    ],
-//                  ),
-//                  child: Hero(
-//                    tag: widget.foodInfo.toString(),
-//                    child: ClipRRect(
-//                      borderRadius: BorderRadius.circular(30.0),
-//                      child: CachedNetworkImage(
-//                        imageUrl: widget.foodInfo.foodImageUrl,
-//                        fit: BoxFit.cover,
-//                      ),
-//                    ),
-//                  ),
-//                ),
-//                Positioned(
-//                  bottom: 0,
-//                  left: 1,
-//                  right: 1,
-//                  child: Container(
-//                  //  margin: EdgeInsets.all(10),
-//                      height: 490,
-//                    //  width: 40,
-//
-//                      child: Card(
-//                        color: Colors.grey[300],
-//                        shape: RoundedRectangleBorder(
-//                          borderRadius: BorderRadius.only(topRight: Radius.circular(30),topLeft: Radius.circular(30))
-//                        ),
-//                        child:widget.foodInfo.instructions!= null ?Text(widget.foodInfo.instructions):Text("Empty"),
-//                      )),
-//                )
-//              ],
-//            ),
-//          ),
-//
-//
-//        ],
-//      ),
-//    );
-//  }
-//}
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:foodre/Model/FoodInfo.dart';
+import 'package:foodre/Model/PopularFoodModel.dart';
 
 class DetailScreen extends StatefulWidget {
-  final PopularFoodModel foodInformation;
+  final PopularFoodModel? foodInformation;
 
   // final bool inFavorites;
 
@@ -91,9 +16,9 @@ class DetailScreen extends StatefulWidget {
 
 class _DetailScreenState extends State<DetailScreen>
     with SingleTickerProviderStateMixin {
-  TabController _tabController;
-  ScrollController _scrollController;
-  bool _inFavorites;
+  TabController? _tabController;
+  ScrollController? _scrollController;
+  bool? _inFavorites;
 
   @override
   void initState() {
@@ -106,14 +31,14 @@ class _DetailScreenState extends State<DetailScreen>
   @override
   void dispose() {
     // "Unmount" the controllers:
-    _tabController.dispose();
-    _scrollController.dispose();
+    _tabController!.dispose();
+    _scrollController!.dispose();
     super.dispose();
   }
 
   void _toggleInFavorites() {
     setState(() {
-      _inFavorites = !_inFavorites;
+      _inFavorites = !_inFavorites!;
     });
   }
 
@@ -121,18 +46,18 @@ class _DetailScreenState extends State<DetailScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       body: NestedScrollView(
-     //   controller: _scrollController,
+        //   controller: _scrollController,
         headerSliverBuilder: (BuildContext context, bool innerViewIsScrolled) {
           return <Widget>[
             SliverAppBar(
               backgroundColor: Colors.white,
               flexibleSpace: FlexibleSpaceBar(
-              //  collapseMode: CollapseMode.parallax,
+                //  collapseMode: CollapseMode.parallax,
                 background: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     CachedNetworkImage(
-                      imageUrl: widget.foodInformation.foodImageUrl,
+                      imageUrl: widget.foodInformation!.image!,
                       fit: BoxFit.cover,
                     )
                   ],
@@ -161,14 +86,13 @@ class _DetailScreenState extends State<DetailScreen>
         },
         body: TabBarView(
           children: <Widget>[
-
-                IngredientsView(widget.foodInformation),
-
-            widget.foodInformation.steps != null? StepsView(widget.foodInformation.steps):Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Text("There is no stpes in this recipe."),
-            )
-
+            IngredientsView(widget.foodInformation!),
+            widget.foodInformation!.readyInMinutes != null
+                ? StepsView(widget.foodInformation!.instructions!)
+                : Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Text("There is no stpes in this recipe."),
+                  )
           ],
           controller: _tabController,
         ),
@@ -199,37 +123,28 @@ class IngredientsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-        itemCount: ingredients.extendedIngredients.length,
+        itemCount: ingredients.extendedIngredients!.length,
         itemBuilder: (BuildContext context, int index) {
           return Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
               CachedNetworkImage(
-                imageUrl:"https://spoonacular.com/cdn/ingredients_100x100/"+ingredients.extendedIngredients[index].image ,
+                imageUrl: "https://spoonacular.com/cdn/ingredients_100x100/" +
+                    ingredients.extendedIngredients![index].image!,
               ),
-              Text(ingredients.extendedIngredients[index].name,style: TextStyle(fontWeight: FontWeight.w500),),
               Text(
-                  ingredients.extendedIngredients[index].amount.toString() +
-                      " " +
-                      ingredients.extendedIngredients[index].unit),
+                ingredients.extendedIngredients![index].name!,
+                style: TextStyle(fontWeight: FontWeight.w500),
+              ),
+              Text(ingredients.extendedIngredients![index].amount!.toString() +
+                  " " +
+                  ingredients.extendedIngredients![index].unit!),
             ],
           );
         });
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
 
 class StepsView extends StatelessWidget {
   final String preparationSteps;
@@ -240,7 +155,10 @@ class StepsView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(17.0),
-      child: Text(preparationSteps,style: TextStyle(fontSize: 16),),
+      child: Text(
+        preparationSteps,
+        style: TextStyle(fontSize: 16),
+      ),
     );
   }
 }

@@ -1,36 +1,30 @@
+import 'package:json_annotation/json_annotation.dart';
+
 import 'ExtendedIngredients.dart';
 
-class  RecommendModel{
-  String foodTitle;
-  String foodImageUrl;
-  int mints;
-  String steps;
-  int servings;
-  List<String> dishType = [];
-  List<ExtendedIngredients> extendedIngredients;
+part 'RecommendedModel.g.dart';
+
+@JsonSerializable()
+class RecommendModel {
+  String? title;
+  String? image;
+  int? readyInMinutes;
+  String? instructions;
+  int? servings;
+  List<String>? dishTypes = [];
+  List<ExtendedIngredients>? extendedIngredients;
 
   RecommendModel(
-      {this.foodTitle,
-        this.foodImageUrl,
-        this.mints,
-        this.steps,
-        this.servings,
-        this.extendedIngredients,
-        this.dishType});
+      {this.title,
+      this.image,
+      this.readyInMinutes,
+      this.instructions,
+      this.servings,
+      this.extendedIngredients,
+      this.dishTypes});
 
-  RecommendModel.fromJson(Map<String, dynamic> parsedJson) {
-    var list = parsedJson['extendedIngredients'] as List;
-    List<ExtendedIngredients> imagesList =
-    list.map((i) => ExtendedIngredients.fromJson(i)).toList();
-    var dishTypeFromJson = parsedJson['dishTypes'];
-    List<String> dishTypeList = dishTypeFromJson.cast<String>();
+  factory RecommendModel.fromJson(Map<String, dynamic> json) =>
+      _$RecommendModelFromJson(json);
 
-    foodTitle = parsedJson['title'];
-    foodImageUrl = parsedJson['image'];
-    mints = parsedJson['readyInMinutes'];
-    servings = parsedJson['servings'];
-    extendedIngredients = imagesList;
-    dishType = dishTypeList;
-    steps = parsedJson['instructions'];
-  }
+  Map<String, dynamic> toJson() => _$RecommendModelToJson(this);
 }

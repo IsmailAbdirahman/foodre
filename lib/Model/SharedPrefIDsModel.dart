@@ -1,7 +1,7 @@
 
 
 class  SharedPrefIDsModel{
-  final String id;
+  final String? id;
 
 
   SharedPrefIDsModel({this.id});

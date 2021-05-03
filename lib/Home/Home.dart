@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:foodre/AppState/AppState.dart';
-import 'package:foodre/Model/FoodInfo.dart';
 import 'package:flutter/material.dart';
+import 'package:foodre/Model/PopularFoodModel.dart';
 import 'package:foodre/Model/RecommendedModel.dart';
 import 'package:foodre/Service/Service.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -17,8 +17,8 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   int _selectedIndex = 0;
 
-  Future<List<PopularFoodModel>> popularListFromService;
-  Future<List<RecommendModel>> recommendListFromService;
+  Future<List<PopularFoodModel>>? popularListFromService;
+  Future<List<RecommendModel>>? recommendListFromService;
 
   @override
   void initState() {
@@ -76,13 +76,13 @@ class _HomeState extends State<Home> {
 
   Widget recommendedListWidget() {
     return Container(
-      height: SizeConfig.blockSizeVertical * 32,
-      width: SizeConfig.blockSizeHorizontal * 90,
+      height: SizeConfig.blockSizeVertical! * 32,
+      width: SizeConfig.blockSizeHorizontal! * 90,
       child: FutureBuilder<List<RecommendModel>>(
         future: recommendListFromService,
         builder: (BuildContext context, snapshot) {
           if (snapshot.hasData) {
-            List<RecommendModel> recommendModelSnapshot = snapshot.data;
+            List<RecommendModel> recommendModelSnapshot = snapshot.data!;
             return ListView.builder(
                 scrollDirection: Axis.horizontal,
                 shrinkWrap: true,
@@ -120,10 +120,10 @@ class _HomeState extends State<Home> {
         future: popularListFromService,
         builder: (BuildContext context, snapshot) {
           if (snapshot.hasData) {
-            List<PopularFoodModel> foodInfoSnapshot = snapshot.data;
+            List<PopularFoodModel> foodInfoSnapshot = snapshot.data!;
 
             return Container(
-              height: SizeConfig.blockSizeVertical * 2000,
+              height: SizeConfig.blockSizeVertical! * 2000,
               child: ListView.builder(
                   scrollDirection: Axis.vertical,
                   physics: NeverScrollableScrollPhysics(),
@@ -140,7 +140,7 @@ class _HomeState extends State<Home> {
 }
 
 class RecommendCard extends StatelessWidget {
-  final RecommendModel recommendModel;
+  final RecommendModel? recommendModel;
 
   RecommendCard({this.recommendModel});
 
@@ -169,7 +169,7 @@ class RecommendCard extends StatelessWidget {
       left: 10,
       bottom: -30.0,
       child: Container(
-        height: SizeConfig.blockSizeVertical * 22,
+        height: SizeConfig.blockSizeVertical! * 22,
         width: 230,
         child: Padding(
           padding: const EdgeInsets.all(28.0),
@@ -205,14 +205,14 @@ class RecommendCard extends StatelessWidget {
   Widget recommendedImagesWidget() {
     return Container(
         margin: EdgeInsets.all(20),
-        height: SizeConfig.blockSizeVertical * 24,
-        width: SizeConfig.blockSizeHorizontal * 53,
+        height: SizeConfig.blockSizeVertical! * 24,
+        width: SizeConfig.blockSizeHorizontal! * 53,
         child: Hero(
-          tag: recommendModel.foodImageUrl,
+          tag: recommendModel!.image!,
           child: ClipRRect(
               borderRadius: BorderRadius.circular(30),
               child: CachedNetworkImage(
-                imageUrl: recommendModel.foodImageUrl,
+                imageUrl: recommendModel!.image!,
                 fit: BoxFit.cover,
               )),
         ));
@@ -221,7 +221,7 @@ class RecommendCard extends StatelessWidget {
   Widget recommendedTitlesWidget() {
     return Padding(
       padding: const EdgeInsets.all(10.0),
-      child: Text(recommendModel.foodTitle,
+      child: Text(recommendModel!.title!,
           overflow: TextOverflow.ellipsis,
           style: TextStyle(fontWeight: FontWeight.w800, fontSize: 17)),
     );
@@ -229,7 +229,7 @@ class RecommendCard extends StatelessWidget {
 
   Widget recommendedMinitsWidget() {
     return Text(
-      recommendModel.mints.toString() + " " + "mins",
+      recommendModel!.readyInMinutes.toString() + " " + "mins",
       style: TextStyle(fontWeight: FontWeight.w600),
     );
   }
@@ -244,7 +244,7 @@ class RecommendCard extends StatelessWidget {
   }
 
   Widget recommendedServingWidget() {
-    return Text(recommendModel.servings.toString() + " " + "servings",
+    return Text(recommendModel!.servings.toString() + " " + "servings",
         style: TextStyle(fontWeight: FontWeight.w600));
   }
 
@@ -287,7 +287,7 @@ class PopularCard extends StatelessWidget {
             left: 160,
             bottom: 40.0,
             child: Container(
-              height: SizeConfig.blockSizeVertical * 21,
+              height: SizeConfig.blockSizeVertical! * 21,
               width: 230,
               child: Padding(
                 padding: const EdgeInsets.only(left: 10, right: 10),
@@ -341,16 +341,16 @@ class PopularCard extends StatelessWidget {
   Widget popularImagesWidget() {
     return Container(
         margin: EdgeInsets.all(20),
-        height: SizeConfig.blockSizeVertical * 25,
-        width: SizeConfig.blockSizeHorizontal * 45,
+        height: SizeConfig.blockSizeVertical! * 25,
+        width: SizeConfig.blockSizeHorizontal! * 45,
         child: Hero(
-          tag: foodInformation.foodImageUrl,
+          tag: foodInformation.image!,
           child: Padding(
             padding: const EdgeInsets.only(top: 20, bottom: 20, right: 20),
             child: ClipRRect(
                 borderRadius: BorderRadius.circular(30),
                 child: CachedNetworkImage(
-                  imageUrl: foodInformation.foodImageUrl,
+                  imageUrl: foodInformation.image!,
                   fit: BoxFit.cover,
                 )),
           ),
@@ -360,7 +360,7 @@ class PopularCard extends StatelessWidget {
   Widget popularTitlesWidget() {
     return Padding(
       padding: const EdgeInsets.only(top: 5, left: 10, right: 10),
-      child: Text(foodInformation.foodTitle,
+      child: Text(foodInformation.title!,
           overflow: TextOverflow.ellipsis,
           style: TextStyle(fontWeight: FontWeight.w800, fontSize: 17)),
     );
@@ -368,7 +368,7 @@ class PopularCard extends StatelessWidget {
 
   Widget popularMinitsWidget() {
     return Text(
-      foodInformation.mints.toString() + " " + "mins",
+      foodInformation.readyInMinutes.toString() + " " + "mins",
       style: TextStyle(fontWeight: FontWeight.w600),
     );
   }
@@ -387,7 +387,7 @@ class PopularCard extends StatelessWidget {
         ));
   }
 
-  Widget favButtonOfpopularWidget() {}
+ // Widget favButtonOfpopularWidget() {}
 
 
 }

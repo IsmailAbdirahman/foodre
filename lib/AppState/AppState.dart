@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:hive/hive.dart';
 
 class AppState extends ChangeNotifier {
-  Box<String> idListsBox;
-  List<String> _foodIdsListt = [];
+  Box<String>? idListsBox;
+  List<String>? _foodIdsListt = [];
 
   get foodIdsListt => _foodIdsListt;
 
@@ -12,35 +12,12 @@ class AppState extends ChangeNotifier {
     getDataFromHive();
   }
 
-//  saveDataIntoHive(String foodId) {
-//
-//    if (!_foodIdsListt.contains(foodId)) {
-//      idListsBox.put(int.parse(foodId), foodId);
-//    } else {
-//      idListsBox.delete(int.parse(foodId));
-//      print("ALready exist");
-//    }
-//
-//    notifyListeners();
-//  }
-//
-//  getDataFromHive() {
-//    if (idListsBox != null) {
-//      List<int> keys = idListsBox.keys.cast<int>().toList();
-//      keys.forEach((i) {
-//        idListsBox.get(i);
-//        _foodIdsListt.add(idListsBox.get(i));
-//      });
-//    }
-//    notifyListeners();
-//  }
-
   saveDataIntoHive(String foodId) {
     if (!getDataFromHive(foodId: int.parse(foodId))) {
-      idListsBox.put(int.parse(foodId), foodId);
+      idListsBox!.put(int.parse(foodId), foodId);
       print("THE RE ADDED KEY IS ${int.parse(foodId)}");
     } else {
-      idListsBox.delete(int.parse(foodId));
+      idListsBox!.delete(int.parse(foodId));
       print("THE RE REMOVED KEY IS ${int.parse(foodId)}");
 
     }
@@ -48,17 +25,17 @@ class AppState extends ChangeNotifier {
     notifyListeners();
   }
 
-  bool getDataFromHive({int foodId}) {
+  bool getDataFromHive({int? foodId}) {
     if (idListsBox != null) {
-      List<int> keys = idListsBox.keys.cast<int>().toList();
+      List<int> keys = idListsBox!.keys.cast<int>().toList();
       keys.forEach((i) {
-        idListsBox.get(i);
-        _foodIdsListt.remove(idListsBox.get(i));
+        idListsBox!.get(i);
+        _foodIdsListt!.remove(idListsBox!.get(i));
 
-        _foodIdsListt.add(idListsBox.get(i));
+        _foodIdsListt!.add(idListsBox!.get(i)!);
       });
     }
-    if (idListsBox.containsKey(foodId)) {
+    if (idListsBox!.containsKey(foodId)) {
       return true;
     } else {
       return false;

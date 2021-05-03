@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 import 'Home/Home.dart';
 
 class DisplayData extends StatefulWidget {
-  DisplayData({Key key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
